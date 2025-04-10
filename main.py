@@ -50,7 +50,7 @@ def main():
     while True:
         user_input = input("> ")
 
-        if user_input == "exit":
+        if user_input in ["exit", ":q"]:
             return None
 
         user_message = {"role": "user", "content": user_input}
