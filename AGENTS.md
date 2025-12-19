@@ -4,23 +4,42 @@ This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get sta
 
 ## Project Setup & Commands
 
-**Environment**: Python 3 with virtual env at `~/code/termline/v`
+**Dual-language project**: Rust (primary) + Python (prototype)
+
+### Rust (Primary Implementation)
 ```bash
-source ~/code/termline/v/bin/activate    # Activate virtualenv
-python main.py                            # Run the application
-./start.sh                                # Alternative start script
+cargo build                  # Build the project
+cargo run                    # Run the application
+cargo test                   # Run all tests
+cargo test test_name         # Run single test matching "test_name"
+cargo clippy                 # Lint with Clippy
+cargo fmt                    # Format code
+cargo check                  # Fast compilation check
 ```
 
-**Dependencies**: openai, rich, python-dotenv (see pip list for full list)
-**No tests/linters configured yet** - add if needed
+### Python (Prototype)
+```bash
+source ~/code/termline/v/bin/activate  # Activate virtualenv
+python main.py                          # Run Python prototype
+./start.sh                              # Alternative start script
+```
 
 ## Code Style Guidelines
 
+### Rust
+- **Imports**: std → external crates → local modules (group with blank lines)
+- **Formatting**: Use `cargo fmt` (rustfmt defaults: 4-space indent, 100 char line width)
+- **Types**: Explicit types for struct fields, use type inference for local variables
+- **Naming**: `snake_case` (functions/vars), `PascalCase` (types/traits), `SCREAMING_SNAKE_CASE` (constants)
+- **Error handling**: Use `Result<T, E>`, avoid `unwrap()` in production code, use `expect()` with descriptive messages
+- **Patterns**: Prefer `match` over `if let` for clarity, use structured comments (`// ======` for section headers)
+
+### Python
 - **Imports**: stdlib → third-party → local (openai, dotenv, rich, etc.)
 - **Formatting**: 4-space indent, descriptive names (e.g., `user_message`, `print_stream`)
-- **Types**: No type hints currently used (consider adding for new code)
-- **Naming**: snake_case for functions/variables, clear descriptive names
-- **Error handling**: Minimal error handling currently - add try/except for API calls and file operations
+- **Types**: No type hints currently (add for new code)
+- **Naming**: `snake_case` for functions/variables
+- **Error handling**: Add try/except for API calls and file operations
 - **Style**: Simple, readable code; use rich library for terminal formatting
 
 ## Communication Style
