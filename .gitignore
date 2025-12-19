@@ -6,3 +6,8 @@ __pycache__/
 
 # bv (beads viewer) local config and caches
 .bv/
+
+
+# Added by cargo
+
+/target
