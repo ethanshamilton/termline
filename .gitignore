@@ -3,3 +3,6 @@ v
 __pycache__/
 .DS_Store/
 *.log
+
+# bv (beads viewer) local config and caches
+.bv/
