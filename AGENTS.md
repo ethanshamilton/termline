@@ -89,34 +89,61 @@ bd sync               # Commit and push changes
 
 This project uses a **PR-based review workflow**. All work must go through pull requests before merging to `main`.
 
-**Complete workflow for each issue:**
+**Epic-Based Branching:**
+- **Epics** define feature branches (e.g., "Basic REPL functionality", "Error handling")
+- **Tasks** are atomic units of work within an epic
+- ONE feature branch per epic, ONE PR per epic (not per task)
+- Multiple tasks are completed on the same branch before creating PR
 
-1. **Find work**: Run `bd ready` to find actionable work
-2. **Claim issue**: `bd update <id> --status in_progress`
-3. **Create branch**: `git checkout -b issue/<id>` (e.g., `issue/termline-xyz`)
-4. **Implement**: Write code, commit locally as you work
-5. **Push branch**: `git push -u origin issue/<id>`
-6. **Create PR**: 
+**Complete workflow for an epic:**
+
+1. **Identify epic scope**: Look at `bd ready` and group related tasks into a logical epic/milestone
+2. **Create feature branch**: `git checkout -b epic/<name>` (e.g., `epic/basic-repl`)
+3. **Work through tasks sequentially**:
    ```bash
-   gh pr create --title "[<id>] <title>" --body "Closes <id>
+   # Task 1
+   bd update <task-id-1> --status in_progress
+   # ... implement ...
+   git add . && git commit -m "Implement X (<task-id-1>)"
+   bd close <task-id-1>
    
-   ## Summary
-   - Brief description of changes
-   - Link to beads issue: <id>
-   "
+   # Task 2
+   bd update <task-id-2> --status in_progress
+   # ... implement ...
+   git add . && git commit -m "Implement Y (<task-id-2>)"
+   bd close <task-id-2>
+   
+   # Continue for all tasks in epic...
    ```
-7. **Mark for review**: `bd update <id> --status in_review`
-8. **Wait for approval**: Human reviews PR, requests changes if needed
-9. **Address feedback**: If changes requested, commit to same branch and push
-10. **After PR merge**: `bd close <id> --reason="Merged in PR #<num>"`
+4. **Push branch**: `git push -u origin epic/<name>` (can push incrementally or at end)
+5. **Create PR when epic complete**:
+   ```bash
+   gh pr create --title "Epic: <name>" --body "$(cat <<'EOF'
+   ## Summary
+   - Brief description of epic
+   
+   ## Completed Tasks
+   - Closes <task-id-1>
+   - Closes <task-id-2>
+   - Closes <task-id-3>
+   
+   ## Changes
+   - High-level overview of changes
+   EOF
+   )"
+   ```
+6. **Wait for review**: Human reviews entire epic, requests changes if needed
+7. **Address feedback**: Commit additional changes to same branch and push
+8. **After PR merge**: All task issues auto-close via "Closes #xyz" in PR body
 
 **Key Points:**
 - NEVER merge PRs yourself - human reviewer will merge
 - NEVER commit directly to `main` - always work in feature branches
-- Branch naming: `issue/<beads-id>` (e.g., `issue/termline-abc`)
-- PR titles: `[<beads-id>] <description>` (e.g., `[termline-abc] Add streaming support`)
-- Mark issue as `in_review` when PR is ready, not when implementation is done
-- After PR merges, close the beads issue with reference to PR number
+- Branch naming: `epic/<descriptive-name>` (e.g., `epic/basic-repl`, `epic/error-handling`)
+- PR titles: `Epic: <name>` (e.g., `Epic: Basic REPL functionality`)
+- Group 3-7 related tasks per epic for meaningful review scope
+- Commit frequently within the branch (one commit per task is fine)
+- Tasks are closed immediately after completion, epic PR is created after all tasks done
 
 ### Key Concepts
 
@@ -137,10 +164,9 @@ git push                # Push feature branch to remote
 bd sync                 # Sync beads issue status changes
 ```
 
-**If PR is ready for review:**
+**If epic PR is ready for review:**
 ```bash
-gh pr create --title "[<id>] <title>" --body "..."
-bd update <id> --status in_review
+gh pr create --title "Epic: <name>" --body "..."
 bd sync
 ```
 
