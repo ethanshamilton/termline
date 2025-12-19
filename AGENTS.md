@@ -85,13 +85,38 @@ bd close <id1> <id2>  # Close multiple issues at once
 bd sync               # Commit and push changes
 ```
 
-### Workflow Pattern
+### Workflow Pattern (PR + Beads Hybrid)
 
-1. **Start**: Run `bd ready` to find actionable work
-2. **Claim**: Use `bd update <id> --status=in_progress`
-3. **Work**: Implement the task
-4. **Complete**: Use `bd close <id>`
-5. **Sync**: Always run `bd sync` at session end
+This project uses a **PR-based review workflow**. All work must go through pull requests before merging to `main`.
+
+**Complete workflow for each issue:**
+
+1. **Find work**: Run `bd ready` to find actionable work
+2. **Claim issue**: `bd update <id> --status in_progress`
+3. **Create branch**: `git checkout -b issue/<id>` (e.g., `issue/termline-xyz`)
+4. **Implement**: Write code, commit locally as you work
+5. **Push branch**: `git push -u origin issue/<id>`
+6. **Create PR**: 
+   ```bash
+   gh pr create --title "[<id>] <title>" --body "Closes <id>
+   
+   ## Summary
+   - Brief description of changes
+   - Link to beads issue: <id>
+   "
+   ```
+7. **Mark for review**: `bd update <id> --status in_review`
+8. **Wait for approval**: Human reviews PR, requests changes if needed
+9. **Address feedback**: If changes requested, commit to same branch and push
+10. **After PR merge**: `bd close <id> --reason="Merged in PR #<num>"`
+
+**Key Points:**
+- NEVER merge PRs yourself - human reviewer will merge
+- NEVER commit directly to `main` - always work in feature branches
+- Branch naming: `issue/<beads-id>` (e.g., `issue/termline-abc`)
+- PR titles: `[<beads-id>] <description>` (e.g., `[termline-abc] Add streaming support`)
+- Mark issue as `in_review` when PR is ready, not when implementation is done
+- After PR merges, close the beads issue with reference to PR number
 
 ### Key Concepts
 
@@ -106,11 +131,17 @@ bd sync               # Commit and push changes
 
 ```bash
 git status              # Check what changed
-git add <files>         # Stage code changes
-bd sync                 # Commit beads changes
-git commit -m "..."     # Commit code
-bd sync                 # Commit any new beads changes
-git push                # Push to remote
+git add <files>         # Stage code changes (on feature branch)
+git commit -m "..."     # Commit code to feature branch
+git push                # Push feature branch to remote
+bd sync                 # Sync beads issue status changes
+```
+
+**If PR is ready for review:**
+```bash
+gh pr create --title "[<id>] <title>" --body "..."
+bd update <id> --status in_review
+bd sync
 ```
 
 ### Best Practices
