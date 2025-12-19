@@ -23,6 +23,12 @@ python main.py                            # Run the application
 - **Error handling**: Minimal error handling currently - add try/except for API calls and file operations
 - **Style**: Simple, readable code; use rich library for terminal formatting
 
+## Communication Style
+
+- **Responses**: Be concise. Aim for 1/3 current verbosity. Get to the point.
+- **Commit messages**: Short subject line (<50 chars), brief body if needed
+- **PR descriptions**: Summary + key changes only. No fluff.
+
 ## Quick Reference
 
 ```bash
