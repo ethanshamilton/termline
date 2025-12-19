@@ -2,6 +2,27 @@
 
 This project uses **bd** (beads) for issue tracking. Run `bd onboard` to get started.
 
+## Project Setup & Commands
+
+**Environment**: Python 3 with virtual env at `~/code/termline/v`
+```bash
+source ~/code/termline/v/bin/activate    # Activate virtualenv
+python main.py                            # Run the application
+./start.sh                                # Alternative start script
+```
+
+**Dependencies**: openai, rich, python-dotenv (see pip list for full list)
+**No tests/linters configured yet** - add if needed
+
+## Code Style Guidelines
+
+- **Imports**: stdlib → third-party → local (openai, dotenv, rich, etc.)
+- **Formatting**: 4-space indent, descriptive names (e.g., `user_message`, `print_stream`)
+- **Types**: No type hints currently used (consider adding for new code)
+- **Naming**: snake_case for functions/variables, clear descriptive names
+- **Error handling**: Minimal error handling currently - add try/except for API calls and file operations
+- **Style**: Simple, readable code; use rich library for terminal formatting
+
 ## Quick Reference
 
 ```bash
